@@ -1,9 +1,9 @@
 /**
- * @file Utils.h
+ * @file Snake.hpp
  * @author Ángel Talero (angelgotalero@outlook.com)
- * @brief SDL utilities
+ * @brief Snake textures abstraction class
  * @version 0.1
- * @date 2021-12-01
+ * @date 2021-12-05
  * 
  * @copyright Copyright (c) 2021. Angel D. Talero
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -24,56 +24,35 @@
  * IN THE SOFTWARE.
  */
 
-#include <SDL2/SDL.h>
-#include <time.h>
-#include <string>
-#include <map>
+#include "Texture.hpp"
 
 #pragma once
 
-/**
- * @brief Load an image/surface
- * 
- * @param mainSurface Pointer to the main window surface
- * @param path Path to the surface
- * @return SDL_Surface* Surface pointer or nullptr
- */
-SDL_Surface *loadSurface(SDL_Surface *mainSurface, std::string path);
-
-/**
- * @brief Load a texture
- * 
- * @param renderer SDL renderer for main window
- * @param path Path to the texture
- * @return SDL_Texture* Texture pointer or NULL
- */
-SDL_Texture *loadTexture(SDL_Renderer *renderer, std::string path);
-
-/**
- * @brief Initialize SDL subsystems
- * 
- * @return true Initialization succeeded
- * @return false Initialization failed
- */
-bool InitSDL();
-
-/**
- * @brief Get a Random number
- * 
- * @tparam T Data type NUMERIC TYPE!
- * @param lower Min number
- * @param upper Max number
- * @return T Random number
- */
-template <typename T>
-inline T getRandom(T lower, T upper)
+class Snake : public Texture
 {
-    static bool init = false;
-    if (!init)
+    /* Custom datatypes */
+public:
+    enum SnakePart
     {
-        std::srand((unsigned int)time(0));
-        init = true;
-    }
+        HEAD,
+        TURN,
+        BODY,
+        TAIL
+    };
 
-    return std::rand() % (upper - lower + 1) + lower;
-}
+    /* Constructor */
+public:
+    /**
+     * @brief Construct a new SnakeTexture object
+     * 
+     * @param renderer Renderer reference
+     * @param filename Filename of the texture file
+     * @param logs Log reference or NULL
+     */
+    Snake(
+        SDL_Renderer *renderer,
+        std::string filename,
+        Logging *logs) noexcept(false);
+
+    ~Snake();
+};

@@ -1,9 +1,9 @@
 /**
- * @file Utils.h
+ * @file Fruit.hpp
  * @author Ángel Talero (angelgotalero@outlook.com)
- * @brief SDL utilities
+ * @brief Fruit texture abstraction layer
  * @version 0.1
- * @date 2021-12-01
+ * @date 2021-12-02
  * 
  * @copyright Copyright (c) 2021. Angel D. Talero
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -24,56 +24,53 @@
  * IN THE SOFTWARE.
  */
 
-#include <SDL2/SDL.h>
-#include <time.h>
-#include <string>
-#include <map>
-
 #pragma once
 
-/**
- * @brief Load an image/surface
- * 
- * @param mainSurface Pointer to the main window surface
- * @param path Path to the surface
- * @return SDL_Surface* Surface pointer or nullptr
- */
-SDL_Surface *loadSurface(SDL_Surface *mainSurface, std::string path);
+#include "Texture.hpp"
+
+#include <initializer_list>
+#include <vector>
+#include <string>
+
+#include "../Logging/Logging.hpp"
 
 /**
- * @brief Load a texture
- * 
- * @param renderer SDL renderer for main window
- * @param path Path to the texture
- * @return SDL_Texture* Texture pointer or NULL
+ * @class Fruit
+ * @brief Fruit texture abstraction class
  */
-SDL_Texture *loadTexture(SDL_Renderer *renderer, std::string path);
-
-/**
- * @brief Initialize SDL subsystems
- * 
- * @return true Initialization succeeded
- * @return false Initialization failed
- */
-bool InitSDL();
-
-/**
- * @brief Get a Random number
- * 
- * @tparam T Data type NUMERIC TYPE!
- * @param lower Min number
- * @param upper Max number
- * @return T Random number
- */
-template <typename T>
-inline T getRandom(T lower, T upper)
+class Fruit : public Texture
 {
-    static bool init = false;
-    if (!init)
-    {
-        std::srand((unsigned int)time(0));
-        init = true;
-    }
+    /* Private member variables */
+private:
+    std::vector<SDL_Texture *> textures;
 
-    return std::rand() % (upper - lower + 1) + lower;
-}
+    /* Public constants */
+public:
+    const int icon_size = SPRITE_SIZE;
+
+    /* Constructor */
+public:
+    Fruit(SDL_Renderer *renderer,
+          std::initializer_list<std::string> files, Logging *logs) noexcept(false);
+
+    ~Fruit();
+
+    /* Parent member hiding */
+private:
+    using Texture::height;
+    using Texture::width;
+
+    using Texture::setNullSize;
+    using Texture::setSize;
+
+    /* Method overriding */
+public:
+    /**
+     * @brief Get a random fruit texture
+     * 
+     * @return SDL_Texture* const 
+     */
+    SDL_Texture *const getTexture() const override;
+
+    bool renderTexture() override;
+};

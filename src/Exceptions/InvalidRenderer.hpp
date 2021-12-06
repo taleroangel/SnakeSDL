@@ -1,7 +1,7 @@
 /**
- * @file Utils.h
+ * @file InvalidRenderer.hpp
  * @author Ángel Talero (angelgotalero@outlook.com)
- * @brief SDL utilities
+ * @brief InvalidRenderer exception
  * @version 0.1
  * @date 2021-12-01
  * 
@@ -24,56 +24,25 @@
  * IN THE SOFTWARE.
  */
 
-#include <SDL2/SDL.h>
-#include <time.h>
-#include <string>
-#include <map>
-
 #pragma once
 
-/**
- * @brief Load an image/surface
- * 
- * @param mainSurface Pointer to the main window surface
- * @param path Path to the surface
- * @return SDL_Surface* Surface pointer or nullptr
- */
-SDL_Surface *loadSurface(SDL_Surface *mainSurface, std::string path);
+#include <stdexcept>
+#include <exception>
 
 /**
- * @brief Load a texture
- * 
- * @param renderer SDL renderer for main window
- * @param path Path to the texture
- * @return SDL_Texture* Texture pointer or NULL
+ * @class InvalidRenderer
+ * @brief Renderer is not valid exception
  */
-SDL_Texture *loadTexture(SDL_Renderer *renderer, std::string path);
-
-/**
- * @brief Initialize SDL subsystems
- * 
- * @return true Initialization succeeded
- * @return false Initialization failed
- */
-bool InitSDL();
-
-/**
- * @brief Get a Random number
- * 
- * @tparam T Data type NUMERIC TYPE!
- * @param lower Min number
- * @param upper Max number
- * @return T Random number
- */
-template <typename T>
-inline T getRandom(T lower, T upper)
+class InvalidRenderer : public std::exception
 {
-    static bool init = false;
-    if (!init)
-    {
-        std::srand((unsigned int)time(0));
-        init = true;
-    }
+private:
+    std::string _what;
 
-    return std::rand() % (upper - lower + 1) + lower;
-}
+public:
+    InvalidRenderer(std::string what = "NULL renderer reference") : _what(what) {}
+
+    virtual const char *what() const noexcept override
+    {
+        return _what.c_str();
+    }
+};

@@ -1,7 +1,7 @@
 /**
- * @file Utils.h
+ * @file Scenario.hpp
  * @author Ángel Talero (angelgotalero@outlook.com)
- * @brief SDL utilities
+ * @brief Scenario abstraction class
  * @version 0.1
  * @date 2021-12-01
  * 
@@ -24,56 +24,28 @@
  * IN THE SOFTWARE.
  */
 
-#include <SDL2/SDL.h>
-#include <time.h>
-#include <string>
-#include <map>
-
 #pragma once
 
-/**
- * @brief Load an image/surface
- * 
- * @param mainSurface Pointer to the main window surface
- * @param path Path to the surface
- * @return SDL_Surface* Surface pointer or nullptr
- */
-SDL_Surface *loadSurface(SDL_Surface *mainSurface, std::string path);
+#include "Texture.hpp"
 
 /**
- * @brief Load a texture
- * 
- * @param renderer SDL renderer for main window
- * @param path Path to the texture
- * @return SDL_Texture* Texture pointer or NULL
+ * @class Scenario
+ * @brief Scenario texture abstraction layer
  */
-SDL_Texture *loadTexture(SDL_Renderer *renderer, std::string path);
-
-/**
- * @brief Initialize SDL subsystems
- * 
- * @return true Initialization succeeded
- * @return false Initialization failed
- */
-bool InitSDL();
-
-/**
- * @brief Get a Random number
- * 
- * @tparam T Data type NUMERIC TYPE!
- * @param lower Min number
- * @param upper Max number
- * @return T Random number
- */
-template <typename T>
-inline T getRandom(T lower, T upper)
+class Scenario : public Texture
 {
-    static bool init = false;
-    if (!init)
-    {
-        std::srand((unsigned int)time(0));
-        init = true;
-    }
+    /* Public constants */
+public:
+    const int scenario_size = SPRITE_SIZE * MESH_SIZE;
 
-    return std::rand() % (upper - lower + 1) + lower;
-}
+    /* Constructors */
+public:
+    Scenario(SDL_Renderer *renderer, std::string filename, Logging *logs) noexcept(false);
+    ~Scenario();
+
+    /* Methods */
+public:
+    bool renderTexture() override;
+
+    /* Public scenarios */
+};
